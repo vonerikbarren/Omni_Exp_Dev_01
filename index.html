@@ -3,122 +3,665 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Workspace - THREE.js</title>
+    <title>3D Journal Viewer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Left System Menu -->
-    <div class="menu-toggle left-menu-toggle" id="leftMenuToggle">
-        <div class="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </div>
-    
-    <div class="side-menu left-menu" id="leftMenu">
-        <div class="menu-header">
-            <h2>System Controls</h2>
-        </div>
-        <div class="menu-content">
-            <div class="control-section">
-                <h3>Gravity</h3>
-                <label>
-                    <span>Gravity Strength</span>
-                    <input type="range" id="gravitySlider" min="-20" max="20" value="0" step="0.1">
-                    <span id="gravityValue">0.0</span>
-                </label>
-                <button id="toggleGravity">Enable Gravity</button>
-            </div>
-            
-            <div class="control-section">
-                <h3>Floor Management</h3>
-                <label>
-                    <span>Floor Spacing</span>
-                    <input type="range" id="floorSpacing" min="10" max="100" value="30" step="5">
-                    <span id="spacingValue">30</span>
-                </label>
-                <button id="addFloor">Add Floor Above</button>
-                <button id="removeFloor">Remove Floor</button>
-                <div class="floor-count">Floors: <span id="floorCount">3</span></div>
-            </div>
-            
-            <div class="control-section">
-                <h3>Scene Settings</h3>
-                <label>
-                    <span>Grid Opacity</span>
-                    <input type="range" id="gridOpacity" min="0" max="1" value="0.5" step="0.1">
-                    <span id="opacityValue">0.5</span>
-                </label>
-                <button id="resetCamera">Reset Camera (O)</button>
-            </div>
+    <div id="canvas-container"></div>
 
-            <div class="control-section">
-                <h3>Controls</h3>
-                <div class="controls-info">
-                    <p><strong>Movement:</strong> WASD</p>
-                    <p><strong>Up/Down:</strong> R/F</p>
-                    <p><strong>Rotation:</strong> I,9,O,P,L,K</p>
-                    <p><strong>Reset:</strong> O</p>
+    <!-- Camera Circle (FPS indicator) -->
+    <div id="camera-circle"></div>
+
+    <!-- Top Left - Info Panel -->
+    <div id="info-panel">
+        <div class="info-space-title">PRIMARY SPACE</div>
+        <div class="info-username">User: <span id="username">undefined</span></div>
+        <div class="info-timer" id="session-timer">00:00:00</div>
+    </div>
+
+    <!-- Top Right - Search Panel -->
+    <div id="search-panel">
+        <div class="search-icon" id="search-icon">🔍</div>
+        <input type="text" class="search-input" id="search-input" placeholder="Search...">
+    </div>
+
+    <!-- Left Hamburger Button -->
+    <div class="hamburger-btn" id="left-hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- Right Hamburger Button -->
+    <div class="hamburger-btn" id="right-hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- Left Side Menu (Admin/System) -->
+    <div class="side-menu" id="left-menu">
+        <div class="menu-header">
+            <div class="menu-title">ADMIN & SYSTEM</div>
+        </div>
+        <div class="breadcrumb" id="left-breadcrumb">
+            <span class="breadcrumb-item breadcrumb-current">Admin & System</span>
+        </div>
+        <div class="menu-items">
+            <div class="menu-item" data-page="admin">
+                <div class="menu-item-header">
+                    <span>Admin</span>
+                    <span class="expand-icon">▶</span>
+                </div>
+                <div class="submenu">
+                    <div class="submenu-item" data-submenu="admin-00">subMenuItem00</div>
+                    <div class="submenu-item" data-submenu="admin-01">subMenuItem01</div>
+                    <div class="submenu-item" data-submenu="admin-02">subMenuItem02</div>
+                    <div class="submenu-item" data-submenu="admin-03">subMenuItem03</div>
+                    <div class="submenu-item" data-submenu="admin-04">subMenuItem04</div>
+                    <div class="submenu-item" data-submenu="admin-05">subMenuItem05</div>
+                    <div class="submenu-item" data-submenu="admin-06">subMenuItem06</div>
+                    <div class="submenu-item" data-submenu="admin-07">subMenuItem07</div>
+                    <div class="submenu-item" data-submenu="admin-08">subMenuItem08</div>
+                    <div class="submenu-item has-children" data-submenu="admin-theme">
+                        Theme
+                        <span class="expand-icon">▶</span>
+                    </div>
+                    <div class="submenu-item has-children" data-submenu="admin-restart">
+                        Restart App
+                        <span class="expand-icon">▶</span>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-item" data-page="system">
+                <div class="menu-item-header">
+                    <span>System</span>
+                    <span class="expand-icon">▶</span>
+                </div>
+                <div class="submenu">
+                    <div class="submenu-item" data-submenu="system-00">subMenuItem00</div>
+                    <div class="submenu-item" data-submenu="system-01">subMenuItem01</div>
+                    <div class="submenu-item" data-submenu="system-02">subMenuItem02</div>
+                    <div class="submenu-item" data-submenu="system-03">subMenuItem03</div>
+                    <div class="submenu-item" data-submenu="system-04">subMenuItem04</div>
+                    <div class="submenu-item" data-submenu="system-05">subMenuItem05</div>
+                    <div class="submenu-item" data-submenu="system-06">subMenuItem06</div>
+                    <div class="submenu-item" data-submenu="system-07">subMenuItem07</div>
+                    <div class="submenu-item" data-submenu="system-08">subMenuItem08</div>
+                    <div class="submenu-item" data-submenu="system-09">subMenuItem09</div>
+                    <div class="submenu-item" data-submenu="system-10">subMenuItem10</div>
+                </div>
+            </div>
+            <div class="menu-item" data-page="experiences">
+                <div class="menu-item-header">
+                    <span>Experiences</span>
+                    <span class="expand-icon">▶</span>
+                </div>
+                <div class="submenu">
+                    <div class="submenu-item" data-submenu="experiences-00">subMenuItem00</div>
+                    <div class="submenu-item" data-submenu="experiences-01">subMenuItem01</div>
+                    <div class="submenu-item" data-submenu="experiences-02">subMenuItem02</div>
+                    <div class="submenu-item" data-submenu="experiences-03">subMenuItem03</div>
+                    <div class="submenu-item" data-submenu="experiences-04">subMenuItem04</div>
+                    <div class="submenu-item" data-submenu="experiences-05">subMenuItem05</div>
+                    <div class="submenu-item" data-submenu="experiences-06">subMenuItem06</div>
+                    <div class="submenu-item" data-submenu="experiences-07">subMenuItem07</div>
+                    <div class="submenu-item" data-submenu="experiences-08">subMenuItem08</div>
+                    <div class="submenu-item" data-submenu="experiences-09">subMenuItem09</div>
+                    <div class="submenu-item" data-submenu="experiences-10">subMenuItem10</div>
+                </div>
+            </div>
+            <div class="menu-item" data-page="perspectives">
+                <div class="menu-item-header">
+                    <span>Perspectives</span>
+                    <span class="expand-icon">▶</span>
+                </div>
+                <div class="submenu">
+                    <div class="submenu-item" data-submenu="perspectives-00">subMenuItem00</div>
+                    <div class="submenu-item" data-submenu="perspectives-01">subMenuItem01</div>
+                    <div class="submenu-item" data-submenu="perspectives-02">subMenuItem02</div>
+                    <div class="submenu-item" data-submenu="perspectives-03">subMenuItem03</div>
+                    <div class="submenu-item" data-submenu="perspectives-04">subMenuItem04</div>
+                    <div class="submenu-item" data-submenu="perspectives-05">subMenuItem05</div>
+                    <div class="submenu-item" data-submenu="perspectives-06">subMenuItem06</div>
+                    <div class="submenu-item" data-submenu="perspectives-07">subMenuItem07</div>
+                    <div class="submenu-item" data-submenu="perspectives-08">subMenuItem08</div>
+                    <div class="submenu-item" data-submenu="perspectives-09">subMenuItem09</div>
+                    <div class="submenu-item" data-submenu="perspectives-10">subMenuItem10</div>
+                </div>
+            </div>
+            <div class="menu-item" data-page="times">
+                <div class="menu-item-header">
+                    <span>Times</span>
+                    <span class="expand-icon">▶</span>
+                </div>
+                <div class="submenu">
+                    <div class="submenu-item" data-submenu="times-00">subMenuItem00</div>
+                    <div class="submenu-item" data-submenu="times-01">subMenuItem01</div>
+                    <div class="submenu-item" data-submenu="times-02">subMenuItem02</div>
+                    <div class="submenu-item" data-submenu="times-03">subMenuItem03</div>
+                    <div class="submenu-item" data-submenu="times-04">subMenuItem04</div>
+                    <div class="submenu-item" data-submenu="times-05">subMenuItem05</div>
+                    <div class="submenu-item" data-submenu="times-06">subMenuItem06</div>
+                    <div class="submenu-item" data-submenu="times-07">subMenuItem07</div>
+                    <div class="submenu-item" data-submenu="times-08">subMenuItem08</div>
+                    <div class="submenu-item" data-submenu="times-09">subMenuItem09</div>
+                    <div class="submenu-item" data-submenu="times-10">subMenuItem10</div>
+                </div>
+            </div>
+            <div class="menu-item" data-page="space">
+                <div class="menu-item-header">
+                    <span>Space</span>
+                    <span class="expand-icon">▶</span>
+                </div>
+                <div class="submenu">
+                    <div class="submenu-item" data-submenu="space-00">subMenuItem00</div>
+                    <div class="submenu-item" data-submenu="space-01">subMenuItem01</div>
+                    <div class="submenu-item" data-submenu="space-02">subMenuItem02</div>
+                    <div class="submenu-item" data-submenu="space-03">subMenuItem03</div>
+                    <div class="submenu-item" data-submenu="space-04">subMenuItem04</div>
+                    <div class="submenu-item" data-submenu="space-05">subMenuItem05</div>
+                    <div class="submenu-item" data-submenu="space-06">subMenuItem06</div>
+                    <div class="submenu-item" data-submenu="space-07">subMenuItem07</div>
+                    <div class="submenu-item" data-submenu="space-08">subMenuItem08</div>
+                    <div class="submenu-item" data-submenu="space-09">subMenuItem09</div>
+                    <div class="submenu-item" data-submenu="space-10">subMenuItem10</div>
+                </div>
+            </div>
+            <div class="menu-item" data-page="objects">
+                <div class="menu-item-header">
+                    <span>Objects</span>
+                    <span class="expand-icon">▶</span>
+                </div>
+                <div class="submenu">
+                    <div class="submenu-item" data-submenu="objects-00">subMenuItem00</div>
+                    <div class="submenu-item" data-submenu="objects-01">subMenuItem01</div>
+                    <div class="submenu-item" data-submenu="objects-02">subMenuItem02</div>
+                    <div class="submenu-item" data-submenu="objects-03">subMenuItem03</div>
+                    <div class="submenu-item" data-submenu="objects-04">subMenuItem04</div>
+                    <div class="submenu-item" data-submenu="objects-05">subMenuItem05</div>
+                    <div class="submenu-item" data-submenu="objects-06">subMenuItem06</div>
+                    <div class="submenu-item" data-submenu="objects-07">subMenuItem07</div>
+                    <div class="submenu-item" data-submenu="objects-08">subMenuItem08</div>
+                    <div class="submenu-item" data-submenu="objects-09">subMenuItem09</div>
+                    <div class="submenu-item" data-submenu="objects-10">subMenuItem10</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Right Navigation Menu -->
-    <div class="menu-toggle right-menu-toggle" id="rightMenuToggle">
-        <div class="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </div>
-    
-    <div class="side-menu right-menu" id="rightMenu">
+    <!-- Right Side Menu (Site Pages) -->
+    <div class="side-menu" id="right-menu">
         <div class="menu-header">
-            <h2>Navigation</h2>
+            <div class="menu-title">NAVIGATION</div>
         </div>
-        <div class="menu-content">
-            <nav class="page-nav">
-                <a href="#home" class="nav-link active" data-page="home">Home</a>
-                <a href="#about" class="nav-link" data-page="about">About</a>
-                <a href="#portfolio" class="nav-link" data-page="portfolio">Portfolio</a>
-                <a href="#services" class="nav-link" data-page="services">Services</a>
-                <a href="#products" class="nav-link" data-page="products">Products</a>
-                <a href="#contact" class="nav-link" data-page="contact">Contact</a>
-            </nav>
+        <div class="breadcrumb" id="right-breadcrumb">
+            <span class="breadcrumb-item breadcrumb-current">Navigation</span>
+        </div>
+        <div class="menu-items">
+            <div class="menu-item active" data-page="home">
+                <div class="menu-item-header">
+                    <span>Home</span>
+                    <span class="expand-icon">▶</span>
+                </div>
+                <div class="submenu">
+                    <div class="submenu-item" data-submenu="home-00">subMenuItem00</div>
+                    <div class="submenu-item" data-submenu="home-01">subMenuItem01</div>
+                    <div class="submenu-item" data-submenu="home-02">subMenuItem02</div>
+                    <div class="submenu-item" data-submenu="home-03">subMenuItem03</div>
+                    <div class="submenu-item" data-submenu="home-04">subMenuItem04</div>
+                    <div class="submenu-item" data-submenu="home-05">subMenuItem05</div>
+                    <div class="submenu-item" data-submenu="home-06">subMenuItem06</div>
+                    <div class="submenu-item" data-submenu="home-07">subMenuItem07</div>
+                    <div class="submenu-item" data-submenu="home-08">subMenuItem08</div>
+                    <div class="submenu-item" data-submenu="home-09">subMenuItem09</div>
+                    <div class="submenu-item" data-submenu="home-10">subMenuItem10</div>
+                </div>
+            </div>
+            <div class="menu-item" data-page="about">
+                <div class="menu-item-header">
+                    <span>About Me</span>
+                    <span class="expand-icon">▶</span>
+                </div>
+                <div class="submenu">
+                    <div class="submenu-item" data-submenu="about-00">subMenuItem00</div>
+                    <div class="submenu-item" data-submenu="about-01">subMenuItem01</div>
+                    <div class="submenu-item" data-submenu="about-02">subMenuItem02</div>
+                    <div class="submenu-item" data-submenu="about-03">subMenuItem03</div>
+                    <div class="submenu-item" data-submenu="about-04">subMenuItem04</div>
+                    <div class="submenu-item" data-submenu="about-05">subMenuItem05</div>
+                    <div class="submenu-item" data-submenu="about-06">subMenuItem06</div>
+                    <div class="submenu-item" data-submenu="about-07">subMenuItem07</div>
+                    <div class="submenu-item" data-submenu="about-08">subMenuItem08</div>
+                    <div class="submenu-item" data-submenu="about-09">subMenuItem09</div>
+                    <div class="submenu-item" data-submenu="about-10">subMenuItem10</div>
+                </div>
+            </div>
+            <div class="menu-item" data-page="portfolio">
+                <div class="menu-item-header">
+                    <span>Portfolio</span>
+                    <span class="expand-icon">▶</span>
+                </div>
+                <div class="submenu">
+                    <div class="submenu-item" data-submenu="portfolio-00">subMenuItem00</div>
+                    <div class="submenu-item" data-submenu="portfolio-01">subMenuItem01</div>
+                    <div class="submenu-item" data-submenu="portfolio-02">subMenuItem02</div>
+                    <div class="submenu-item" data-submenu="portfolio-03">subMenuItem03</div>
+                    <div class="submenu-item" data-submenu="portfolio-04">subMenuItem04</div>
+                    <div class="submenu-item" data-submenu="portfolio-05">subMenuItem05</div>
+                    <div class="submenu-item" data-submenu="portfolio-06">subMenuItem06</div>
+                    <div class="submenu-item" data-submenu="portfolio-07">subMenuItem07</div>
+                    <div class="submenu-item" data-submenu="portfolio-08">subMenuItem08</div>
+                    <div class="submenu-item" data-submenu="portfolio-09">subMenuItem09</div>
+                    <div class="submenu-item" data-submenu="portfolio-10">subMenuItem10</div>
+                </div>
+            </div>
+            <div class="menu-item" data-page="products">
+                <div class="menu-item-header">
+                    <span>Products</span>
+                    <span class="expand-icon">▶</span>
+                </div>
+                <div class="submenu">
+                    <div class="submenu-item" data-submenu="products-00">subMenuItem00</div>
+                    <div class="submenu-item" data-submenu="products-01">subMenuItem01</div>
+                    <div class="submenu-item" data-submenu="products-02">subMenuItem02</div>
+                    <div class="submenu-item" data-submenu="products-03">subMenuItem03</div>
+                    <div class="submenu-item" data-submenu="products-04">subMenuItem04</div>
+                    <div class="submenu-item" data-submenu="products-05">subMenuItem05</div>
+                    <div class="submenu-item" data-submenu="products-06">subMenuItem06</div>
+                    <div class="submenu-item" data-submenu="products-07">subMenuItem07</div>
+                    <div class="submenu-item" data-submenu="products-08">subMenuItem08</div>
+                    <div class="submenu-item" data-submenu="products-09">subMenuItem09</div>
+                    <div class="submenu-item" data-submenu="products-10">subMenuItem10</div>
+                </div>
+            </div>
+            <div class="menu-item" data-page="services">
+                <div class="menu-item-header">
+                    <span>Services</span>
+                    <span class="expand-icon">▶</span>
+                </div>
+                <div class="submenu">
+                    <div class="submenu-item" data-submenu="services-00">subMenuItem00</div>
+                    <div class="submenu-item" data-submenu="services-01">subMenuItem01</div>
+                    <div class="submenu-item" data-submenu="services-02">subMenuItem02</div>
+                    <div class="submenu-item" data-submenu="services-03">subMenuItem03</div>
+                    <div class="submenu-item" data-submenu="services-04">subMenuItem04</div>
+                    <div class="submenu-item" data-submenu="services-05">subMenuItem05</div>
+                    <div class="submenu-item" data-submenu="services-06">subMenuItem06</div>
+                    <div class="submenu-item" data-submenu="services-07">subMenuItem07</div>
+                    <div class="submenu-item" data-submenu="services-08">subMenuItem08</div>
+                    <div class="submenu-item" data-submenu="services-09">subMenuItem09</div>
+                    <div class="submenu-item" data-submenu="services-10">subMenuItem10</div>
+                </div>
+            </div>
+            <div class="menu-item" data-page="resources">
+                <div class="menu-item-header">
+                    <span>Resources</span>
+                    <span class="expand-icon">▶</span>
+                </div>
+                <div class="submenu">
+                    <div class="submenu-item" data-submenu="resources-00">subMenuItem00</div>
+                    <div class="submenu-item" data-submenu="resources-01">subMenuItem01</div>
+                    <div class="submenu-item" data-submenu="resources-02">subMenuItem02</div>
+                    <div class="submenu-item" data-submenu="resources-03">subMenuItem03</div>
+                    <div class="submenu-item" data-submenu="resources-04">subMenuItem04</div>
+                    <div class="submenu-item" data-submenu="resources-05">subMenuItem05</div>
+                    <div class="submenu-item" data-submenu="resources-06">subMenuItem06</div>
+                    <div class="submenu-item" data-submenu="resources-07">subMenuItem07</div>
+                    <div class="submenu-item" data-submenu="resources-08">subMenuItem08</div>
+                    <div class="submenu-item" data-submenu="resources-09">subMenuItem09</div>
+                    <div class="submenu-item" data-submenu="resources-10">subMenuItem10</div>
+                </div>
+            </div>
+            <div class="menu-item" data-page="supporters">
+                <div class="menu-item-header">
+                    <span>Supporters</span>
+                    <span class="expand-icon">▶</span>
+                </div>
+                <div class="submenu">
+                    <div class="submenu-item" data-submenu="supporters-00">subMenuItem00</div>
+                    <div class="submenu-item" data-submenu="supporters-01">subMenuItem01</div>
+                    <div class="submenu-item" data-submenu="supporters-02">subMenuItem02</div>
+                    <div class="submenu-item" data-submenu="supporters-03">subMenuItem03</div>
+                    <div class="submenu-item" data-submenu="supporters-04">subMenuItem04</div>
+                    <div class="submenu-item" data-submenu="supporters-05">subMenuItem05</div>
+                    <div class="submenu-item" data-submenu="supporters-06">subMenuItem06</div>
+                    <div class="submenu-item" data-submenu="supporters-07">subMenuItem07</div>
+                    <div class="submenu-item" data-submenu="supporters-08">subMenuItem08</div>
+                    <div class="submenu-item" data-submenu="supporters-09">subMenuItem09</div>
+                    <div class="submenu-item" data-submenu="supporters-10">subMenuItem10</div>
+                </div>
+            </div>
+            <div class="menu-item" data-page="contact">
+                <div class="menu-item-header">
+                    <span>Contact</span>
+                    <span class="expand-icon">▶</span>
+                </div>
+                <div class="submenu">
+                    <div class="submenu-item" data-submenu="contact-00">subMenuItem00</div>
+                    <div class="submenu-item" data-submenu="contact-01">subMenuItem01</div>
+                    <div class="submenu-item" data-submenu="contact-02">subMenuItem02</div>
+                    <div class="submenu-item" data-submenu="contact-03">subMenuItem03</div>
+                    <div class="submenu-item" data-submenu="contact-04">subMenuItem04</div>
+                    <div class="submenu-item" data-submenu="contact-05">subMenuItem05</div>
+                    <div class="submenu-item" data-submenu="contact-06">subMenuItem06</div>
+                    <div class="submenu-item" data-submenu="contact-07">subMenuItem07</div>
+                    <div class="submenu-item" data-submenu="contact-08">subMenuItem08</div>
+                    <div class="submenu-item" data-submenu="contact-09">subMenuItem09</div>
+                    <div class="submenu-item" data-submenu="contact-10">subMenuItem10</div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- HUD Grid Overlay -->
-    <div class="hud-container" id="hudContainer">
-        <div class="hud-grid" id="hudGrid">
-            <!-- Grid cells will be generated by JavaScript -->
+    <!-- Inspector Panel -->
+    <div id="inspector-panel">
+        <div class="panel-header" id="panel-header">
+            <span class="panel-title">INSPECTOR</span>
+            <div class="panel-controls">
+                <button class="panel-btn" id="minimize-btn">_</button>
+                <button class="panel-btn close-btn" id="close-btn">×</button>
+            </div>
+        </div>
+        <div class="panel-content" id="panel-content">
+            <div>
+                <div class="info-label">Selected Object</div>
+                <div class="info-value" id="selected-name">None</div>
+            </div>
+            <div id="object-details" style="display: none;">
+                <div>
+                    <div class="info-label">Type</div>
+                    <div class="info-text" id="object-type">-</div>
+                </div>
+                <div class="slider-container">
+                    <div class="info-label">Transparency: <span id="transparency-value">100</span>%</div>
+                    <input type="range" min="10" max="100" value="100" class="slider" id="transparency-slider">
+                </div>
+                <div class="summon-buttons">
+                    <button class="summon-btn" id="summon-center">Summon Center</button>
+                    <button class="summon-btn" id="summon-hands">Summon to Hands</button>
+                    <button class="summon-btn" id="summon-folder">Summon Back to Folder</button>
+                </div>
+                <div class="info-box">
+                    <div id="object-position">Position: -</div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Info Panel -->
-    <div class="info-panel">
-        <div class="info-item">
-            <span class="label">Position:</span>
-            <span id="positionInfo">0, 0, 0</span>
+    <!-- Mobile Movement Control -->
+    <div id="mobile-controls">
+        <div class="joystick-base">
+            <div class="joystick-stick" id="joystick-stick"></div>
         </div>
-        <div class="info-item">
-            <span class="label">Rotation:</span>
-            <span id="rotationInfo">0°, 0°, 0°</span>
-        </div>
-        <div class="info-item">
-            <span class="label">FPS:</span>
-            <span id="fpsInfo">60</span>
+        <div class="control-buttons">
+            <button class="control-btn" id="btn-pos" title="Position">POS</button>
+            <button class="control-btn" id="btn-rot" title="Rotation">ROT</button>
+            <button class="control-btn" id="btn-scale" title="Scale">SCL</button>
+            <button class="control-btn" id="btn-lh" title="Left Hand">LH</button>
+            <button class="control-btn" id="btn-rh" title="Right Hand">RH</button>
+            <button class="control-btn" id="btn-ch" title="Conscious Hand">CH</button>
+            <button class="control-btn" id="btn-myspace" title="MySpace">MS</button>
+            <button class="control-btn" id="btn-8">B8</button>
+            <button class="control-btn" id="btn-9">B9</button>
+            <button class="control-btn" id="btn-10">B10</button>
         </div>
     </div>
 
-    <!-- THREE.js Container -->
-    <div id="canvas-container"></div>
+    <!-- Transform Panel -->
+    <div id="transform-panel">
+        <div class="transform-header">
+            <span class="panel-title" id="transform-title">POSITION</span>
+            <button class="panel-btn close-btn" id="transform-close">×</button>
+        </div>
+        <div class="transform-content">
+            <div class="transform-row">
+                <div class="transform-label">X</div>
+                <div class="transform-inputs">
+                    <input type="number" class="transform-input" id="transform-x" value="0" step="0.1">
+                </div>
+            </div>
+            <div class="transform-row">
+                <div class="transform-label">Y</div>
+                <div class="transform-inputs">
+                    <input type="number" class="transform-input" id="transform-y" value="0" step="0.1">
+                </div>
+            </div>
+            <div class="transform-row">
+                <div class="transform-label">Z</div>
+                <div class="transform-inputs">
+                    <input type="number" class="transform-input" id="transform-z" value="0" step="0.1">
+                </div>
+            </div>
+            <div class="transform-row">
+                <div class="transform-label">Step Size</div>
+                <div class="step-control">
+                    <span class="step-label">Range:</span>
+                    <input type="number" class="step-input" id="step-size" value="1" min="-1000" max="1000">
+                </div>
+            </div>
+            <div class="transform-submit-container">
+                <button class="transform-submit-btn" id="transform-submit">Apply Changes</button>
+            </div>
+        </div>
+    </div>
 
-    <!-- Scripts -->
+    <!-- Action Button Grid (30 buttons) -->
+    <div id="action-grid">
+        <button class="action-btn" data-action="1">A1</button>
+        <button class="action-btn" data-action="2">A2</button>
+        <button class="action-btn" data-action="3">A3</button>
+        <button class="action-btn" data-action="4">A4</button>
+        <button class="action-btn" data-action="5">A5</button>
+        <button class="action-btn" data-action="6">A6</button>
+        <button class="action-btn" data-action="7">A7</button>
+        <button class="action-btn" data-action="8">A8</button>
+        <button class="action-btn" data-action="9">A9</button>
+        <button class="action-btn" data-action="10">A10</button>
+        <button class="action-btn" data-action="11">A11</button>
+        <button class="action-btn" data-action="12">A12</button>
+        <button class="action-btn" data-action="13">A13</button>
+        <button class="action-btn" data-action="14">A14</button>
+        <button class="action-btn" data-action="15">A15</button>
+        <button class="action-btn" data-action="16">A16</button>
+        <button class="action-btn" data-action="17">A17</button>
+        <button class="action-btn" data-action="18">A18</button>
+        <button class="action-btn" data-action="19">A19</button>
+        <button class="action-btn" data-action="20">A20</button>
+        <button class="action-btn" data-action="21">A21</button>
+        <button class="action-btn" data-action="22">A22</button>
+        <button class="action-btn" data-action="23">A23</button>
+        <button class="action-btn" data-action="24">A24</button>
+        <button class="action-btn" data-action="25">A25</button>
+        <button class="action-btn" data-action="26">A26</button>
+        <button class="action-btn" data-action="27">A27</button>
+        <button class="action-btn" data-action="28">A28</button>
+        <button class="action-btn" data-action="29">A29</button>
+        <button class="action-btn" data-action="30">A30</button>
+    </div>
+
+    <!-- FAQ Panel -->
+    <div id="faq-panel">
+        <div class="faq-header">
+            <span class="controls-title">CONTROLS & FAQ</span>
+            <button class="panel-btn close-btn" id="faq-close">×</button>
+        </div>
+        <div class="faq-content">
+            <div class="faq-item">
+                <div class="faq-question">⌨️ Keyboard Controls</div>
+                <div class="faq-answer" style="line-height: 2;">
+                    <strong>W</strong> - Move forward<br>
+                    <strong>A</strong> - Move left<br>
+                    <strong>S</strong> - Move backward<br>
+                    <strong>D</strong> - Move right<br>
+                    <strong>R</strong> - Move up<br>
+                    <strong>F</strong> - Move down<br>
+                    <strong>C</strong> - Hold to enable mouse look (FPS mode)<br>
+                    <strong>O</strong> - Reset camera to origin (0, 0, 10)<br>
+                    <strong>0</strong> - Toggle MySpace (collapse/expand grid)<br>
+                    <strong>9</strong> - Toggle User Pocket<br>
+                    <strong>Q</strong> - Toggle Controls & FAQ panel<br>
+                    <strong>X</strong> - Toggle Inspector panel<br>
+                    <strong>Z</strong> - Toggle docks visibility<br>
+                    <strong>Left Shift</strong> - Toggle Left Hand menu<br>
+                    <strong>Right Shift</strong> - Toggle Right Hand menu<br>
+                    <strong>Enter</strong> - Toggle Conscious Hand menu
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">🖱️ Mouse Controls</div>
+                <div class="faq-answer">
+                    <strong>Click & Drag</strong> - Rotate view (orbit camera)<br>
+                    <strong>Hold C + Move Mouse</strong> - FPS camera look (yaw/pitch)<br>
+                    <strong>Click Objects</strong> - Select objects in the scene
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">📱 Mobile Controls</div>
+                <div class="faq-answer">
+                    <strong>Joystick</strong> - Move in 3D space (W/A/S/D equivalent)<br>
+                    <strong>Single Finger Touch on Canvas</strong> - FPS camera look (same as holding C on desktop)<br>
+                    <strong>POS/ROT/SCL buttons</strong> - Open transform panel for selected objects
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">🔍 UI Panels</div>
+                <div class="faq-answer">
+                    <strong>Top Left</strong> - Session info (space title, username, timer)<br>
+                    <strong>Top Right</strong> - Search panel (click icon to expand)<br>
+                    <strong>Inspector (X key)</strong> - Object properties and transparency<br>
+                    <strong>Side Menus</strong> - Click hamburger icons for navigation
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">✋ Hand Menus</div>
+                <div class="faq-answer">
+                    <strong>Left Hand (LH)</strong> - Left Shift key or LH button - Radial menu with 10 options<br>
+                    <strong>Right Hand (RH)</strong> - Right Shift key or RH button - Radial menu with 10 options<br>
+                    <strong>Conscious Hand (CH)</strong> - Enter key or CH button - Main menu controls including Pause Menu<br>
+                    Click on radial menu items to select options. Only one hand menu visible at a time.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">🌐 MySpace (Grid Sphere)</div>
+                <div class="faq-answer">
+                    The spherical grid is your personal space. Press <strong>0 key</strong> or the <strong>MS button</strong> to collapse/expand it. When collapsed, panels animate one-by-one into a smaller sphere. Access also via Conscious Hand menu → MySpace option.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">📦 User Pocket</div>
+                <div class="faq-answer">
+                    Your pocket stores up to <strong>20 items</strong>. Press <strong>9 key</strong> or select from Conscious Hand menu. The pocket panel slides in from the right with a 4x5 grid.<br><br>
+                    <strong>Cell States:</strong><br>
+                    • Empty slots: Dashed border, ready for items<br>
+                    • Items in pocket: 35% opacity (stored)<br>
+                    • Items deployed in scene: 20% opacity (active)<br><br>
+                    Click slots to deploy/recall items. Items can have password protection for security.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">❓ What is this?</div>
+                <div class="faq-answer">
+                    This is an interactive 3D journal viewer where you can explore your daily routines (Morning, Job, Before Bed) in an immersive space. Navigate freely, interact with objects, and customize your experience!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Docks -->
+    <div class="dock" id="dock-bottom">
+        <div class="dock-item" draggable="true" data-item="1">D1</div>
+        <div class="dock-item" draggable="true" data-item="2">D2</div>
+        <div class="dock-item" draggable="true" data-item="3">D3</div>
+        <div class="dock-item" draggable="true" data-item="4">D4</div>
+        <div class="dock-item" draggable="true" data-item="5">D5</div>
+    </div>
+
+    <div class="dock" id="dock-top">
+        <div class="dock-item" draggable="true" data-item="6">D6</div>
+        <div class="dock-item" draggable="true" data-item="7">D7</div>
+        <div class="dock-item" draggable="true" data-item="8">D8</div>
+    </div>
+
+    <div class="dock" id="dock-left">
+        <div class="dock-item" draggable="true" data-item="9">D9</div>
+        <div class="dock-item" draggable="true" data-item="10">D10</div>
+        <div class="dock-item" draggable="true" data-item="11">D11</div>
+    </div>
+
+    <div class="dock" id="dock-right">
+        <div class="dock-item" draggable="true" data-item="12">D12</div>
+        <div class="dock-item" draggable="true" data-item="13">D13</div>
+        <div class="dock-item" draggable="true" data-item="14">D14</div>
+    </div>
+
+    <!-- Restart Prompt Modal -->
+    <div class="prompt-modal" id="restart-prompt">
+        <button class="prompt-close" onclick="document.getElementById('restart-prompt').classList.remove('visible')">×</button>
+        <div class="prompt-title">Restart Application?</div>
+        <div class="prompt-message">Are you sure you want to restart the application? All unsaved progress will be lost.</div>
+        <div class="prompt-buttons">
+            <button class="prompt-btn" onclick="location.reload()">Yes</button>
+            <button class="prompt-btn" onclick="document.getElementById('restart-prompt').classList.remove('visible')">No</button>
+            <button class="prompt-btn" onclick="showWisdomPrompt()">Not Sure</button>
+        </div>
+    </div>
+
+    <!-- Wisdom Prompt Modal -->
+    <div class="prompt-modal" id="wisdom-prompt">
+        <button class="prompt-close" onclick="document.getElementById('wisdom-prompt').classList.remove('visible')">×</button>
+        <div class="prompt-title">Maybe This Will Help...</div>
+        <div class="prompt-message" id="wisdom-text"></div>
+        <div class="prompt-buttons">
+            <button class="prompt-btn" onclick="document.getElementById('wisdom-prompt').classList.remove('visible')">Close</button>
+        </div>
+    </div>
+
+    <!-- Theme Selector Modal -->
+    <div class="prompt-modal" id="theme-prompt">
+        <button class="prompt-close" onclick="document.getElementById('theme-prompt').classList.remove('visible')">×</button>
+        <div class="prompt-title">Select Theme</div>
+        <div class="theme-grid" id="theme-grid"></div>
+    </div>
+
+    <!-- Left Hand Menu -->
+    <div class="hand-menu" id="left-hand">
+        <div class="hand-circle">LH</div>
+        <div class="radial-menu" id="lh-radial"></div>
+    </div>
+
+    <!-- Right Hand Menu -->
+    <div class="hand-menu" id="right-hand">
+        <div class="hand-circle">RH</div>
+        <div class="radial-menu" id="rh-radial"></div>
+    </div>
+
+    <!-- Conscious Hand Menu -->
+    <div class="hand-menu" id="conscious-hand">
+        <div class="hand-circle">CH</div>
+        <div class="radial-menu" id="ch-radial"></div>
+    </div>
+
+    <!-- Pause Overlay -->
+    <div class="pause-overlay" id="pause-overlay">
+        <div class="pause-menu">
+            <div class="pause-title">PAUSED</div>
+            <button class="pause-btn" id="resume-btn">Resume</button>
+        </div>
+    </div>
+
+    <!-- Pocket Panel -->
+    <div class="pocket-panel" id="pocket-panel">
+        <div class="pocket-header">USER POCKET</div>
+        <div class="pocket-grid" id="pocket-grid"></div>
+    </div>
+
+    <!-- External Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <!-- Main Application Script -->
     <script src="script.js"></script>
 </body>
 </html>

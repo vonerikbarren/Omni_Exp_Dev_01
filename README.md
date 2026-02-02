@@ -1,150 +1,187 @@
-# 3D Workspace - THREE.js Project
+# 3D Journal Viewer
 
-A professional, memory-efficient 3D workspace built with THREE.js and GSAP featuring dynamic floor management, physics, and an interactive HUD system.
+An interactive 3D journal viewer built with Three.js, featuring immersive navigation, hand-based menus, and a customizable space for managing your daily routines.
 
 ## Features
 
-### 🎮 Controls
-- **WASD** - Move camera (Forward, Left, Back, Right)
-- **R/F** - Move Up/Down
-- **I/K** - Rotate camera Up/Down
-- **9/0** - Rotate camera Left/Right  
-- **L/P** - Roll camera Right/Left
-- **O** - Reset camera to default position (0, 0, 100)
+### 🎮 Navigation
+- **WASD Movement** - Navigate through 3D space
+- **R/F Keys** - Move up and down
+- **C Key + Mouse** - Metroid Prime-style FPS camera look
+- **O Key** - Reset camera to origin
+- **Breathing Camera** - Subtle camera bobbing for immersion
 
-### 🏗️ System Features
-- **Multi-Floor Grid System** - Dynamic floors (basement, main, attic)
-- **Gravity Physics** - Adjustable gravity system for objects
-- **Memory Efficient** - Optimized for performance with minimal resource usage
-- **Floor Management** - Add/remove floors and adjust spacing dynamically
-- **Interactive HUD** - Grid overlay with expandable cells
-- **Real-time Info Panel** - Position, rotation, and FPS display
+### ✋ Hand Menus
+- **Left Hand (Left Shift)** - Radial menu with 10 customizable options
+- **Right Hand (Right Shift)** - Mirror radial menu for quick actions
+- **Conscious Hand (Enter)** - Main menu with Pause, MySpace, User Pocket controls
 
-### 🎨 UI Components
-- **Left Menu** - System controls (gravity, floors, scene settings)
-- **Right Menu** - Navigation pages (Home, About, Portfolio, Services, Products, Contact)
-- **HUD Grid** - Interactive 4x4 grid with expandable cells
-- **Info Panel** - Real-time camera and performance metrics
+### 🌐 MySpace (Grid Sphere)
+- Spherical grid system for organizing content
+- Toggle with **0 key** or MS button
+- Collapse/expand animation (panels animate one-by-one)
+- Customizable positions on sphere
 
-## Quick Start
+### 📦 User Pocket
+- 20-slot inventory system (4×5 grid)
+- Toggle with **9 key** or via Conscious Hand menu
+- Deploy/recall items to/from scene
+- Password protection support
+- Visual states for empty/stored/deployed items
 
-### GitHub Pages Setup
+### 🎨 Themes
+9 beautiful themes available:
+- Silver (default)
+- Dark Blue
+- Orange
+- Yellow
+- Red
+- Purple
+- Teal
+- Neon Blue
+- Magenta
 
-1. **Create a new repository on GitHub**
-   ```bash
-   # Create a new repo on GitHub (e.g., "3d-workspace")
-   ```
+### 🔍 Inspector Panel
+- Object selection and properties
+- Transparency controls
+- Transform tools (Position, Rotation, Scale)
+- Summon controls:
+  - Summon to Center
+  - Summon to Hands
+  - Summon Back to Folder
 
-2. **Clone and add files**
-   ```bash
-   git clone https://github.com/YOUR-USERNAME/3d-workspace.git
-   cd 3d-workspace
-   
-   # Copy the three files into the repository:
-   # - index.html
-   # - style.css
-   # - script.js
-   ```
+### 📱 Mobile Support
+- Touch-enabled joystick for movement
+- Single-finger touch for FPS camera
+- Mobile control buttons (POS, ROT, SCL, LH, RH, CH, MS)
 
-3. **Push to GitHub**
-   ```bash
-   git add .
-   git commit -m "Initial commit: 3D Workspace"
-   git push origin main
-   ```
+### 🎯 Additional Features
+- Dockable items (drag-and-drop between 4 docks)
+- Session timer
+- Search panel
+- Hierarchical navigation menus
+- 30 customizable action buttons
+- Transform panel with submit functionality
+- FAQ/Controls panel
 
-4. **Enable GitHub Pages**
-   - Go to your repository on GitHub
-   - Click **Settings**
-   - Navigate to **Pages** (left sidebar)
-   - Under **Source**, select **main** branch
-   - Click **Save**
-   - Your site will be live at: `https://YOUR-USERNAME.github.io/3d-workspace/`
+## Installation
 
-## Local Development
-
-Simply open `index.html` in a modern web browser. No build process or local server required!
-
-## Project Structure
-
-```
-3d-workspace/
-├── index.html      # Main HTML structure
-├── style.css       # Styling with tech aesthetic
-├── script.js       # THREE.js logic and controls
-└── README.md       # This file
+1. Clone this repository:
+```bash
+git clone [your-repo-url]
+cd 3d-journal-viewer
 ```
 
-## Technical Details
+2. Open `index.html` in a modern web browser
 
-### Dependencies (CDN)
-- **THREE.js** (r128) - 3D rendering engine
-- **GSAP** (3.12.2) - Animation library
+**Note:** Make sure all three files are in the same directory:
+- `index.html`
+- `style.css`
+- `script.js`
 
-### Memory Optimization
-- Low-poly octahedrons (detail level 0)
-- Efficient grid helpers
-- Pixel ratio capped at 2x
-- Proper geometry/material disposal
-- Maximum 10 floors limit
+## File Structure
 
-### Browser Support
-- Chrome/Edge (recommended)
-- Firefox
-- Safari
-- Modern browsers with WebGL support
+```
+3d-journal-viewer/
+├── index.html    # Main HTML structure
+├── style.css     # All styling and themes
+└── script.js     # Three.js logic and interactions
+```
+
+## External Dependencies
+
+The project uses CDN links for:
+- Three.js r128
+- GSAP 3.12.2
+- Google Fonts (Orbitron)
+
+No npm installation required!
+
+## Controls Quick Reference
+
+### Keyboard
+- **WASD** - Move forward/left/back/right
+- **R/F** - Move up/down
+- **C** - Hold for FPS mouse look
+- **O** - Reset camera
+- **0** - Toggle MySpace
+- **9** - Toggle Pocket
+- **Q** - Toggle FAQ
+- **X** - Toggle Inspector
+- **Z** - Toggle Docks
+- **Left Shift** - Left Hand menu
+- **Right Shift** - Right Hand menu
+- **Enter** - Conscious Hand menu
+
+### Mouse
+- **Click & Drag** - Orbit camera
+- **C + Mouse** - FPS look
+- **Click Objects** - Select objects
+
+### Mobile
+- **Joystick** - Move in space
+- **Single Finger Touch** - FPS camera look
+- **Control Buttons** - Access features
 
 ## Customization
 
-### Adding New Objects
-Edit `script.js` and use the `addOctahedron()` function:
+### Adding New Journal Pages
+Edit the `pageData` array in `script.js`:
 ```javascript
-addOctahedron(x, y, z, color);
-// Example: addOctahedron(10, 5, -10, 0xff0000);
+const pageData = [
+    { title: 'Your\nTitle', color: 0x4A90E2, lat: 2, lon: 0 }
+];
 ```
 
-### Changing Floor Colors
-Modify the colors array in the `addFloorAbove()` function:
+### Adding Themes
+Edit the `themes` object in `script.js`:
 ```javascript
-const colors = [0xff6b6b, 0x4ecdc4, 0x95e1d3, 0xffe66d, 0xff6b9d, 0x6bcf7f];
+themes = {
+    'yourtheme': {
+        name: 'Your Theme',
+        primary: 'rgba(r, g, b, a)',
+        accent: '#HEXCOLOR',
+        // ... other properties
+    }
+}
 ```
 
-### Adjusting Camera Speed
-In `script.js`, modify these constants:
+### Customizing Hand Menus
+Edit the options arrays in `setupHandMenus()`:
 ```javascript
-const moveSpeed = 0.5;      // Movement speed
-const rotateSpeed = 0.02;   // Rotation speed
+const lhOptions = ['Option 1', 'Option 2', ...];
 ```
 
-## Features to Extend
+## Browser Compatibility
 
-- Add custom 3D models
-- Implement object selection/manipulation
-- Add more physics interactions
-- Create save/load system for camera positions
-- Add collaborative features
-- Integrate with backend API
+Tested and working on:
+- Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
 
-## Performance Tips
+Requires WebGL support.
 
-1. Keep floor count under 10 for optimal performance
-2. Limit the number of octahedrons (under 50 recommended)
-3. Use lower pixel ratios on mobile devices
-4. Close unused menus to reduce UI overhead
+## Future Enhancements
+
+- [ ] Add item storage/retrieval to pocket
+- [ ] Implement password protection for pocket items
+- [ ] Add more journal page templates
+- [ ] Cloud save functionality
+- [ ] Multi-user collaboration
+- [ ] VR support
 
 ## License
 
-MIT License - Feel free to use this project for personal or commercial purposes.
+MIT License - Feel free to use and modify!
 
 ## Credits
 
 Built with:
-- [THREE.js](https://threejs.org/) - 3D graphics library
-- [GSAP](https://greensock.com/gsap/) - Animation platform
-- Custom controls and physics system
+- Three.js for 3D rendering
+- GSAP for smooth animations
+- Orbitron font by Google Fonts
 
 ---
 
-**Enjoy building in 3D space! 🚀**
-
-For questions or improvements, feel free to open an issue on GitHub.
+**Checkpoint:** This is a stable build ready for GitHub. All core features implemented and tested.

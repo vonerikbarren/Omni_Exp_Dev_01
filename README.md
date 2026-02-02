@@ -2,6 +2,8 @@
 
 An interactive 3D journal viewer built with Three.js, featuring immersive navigation, hand-based menus, and a customizable space for managing your daily routines.
 
+Beta = ver_0001
+
 ## Features
 
 ### 🎮 Navigation

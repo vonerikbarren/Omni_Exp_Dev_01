@@ -194,6 +194,83 @@
         }
 
         /* Mobile Movement Control */
+        #mobile-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .joystick-base {
+            width: 150px;
+            height: 150px;
+            background: rgba(15, 15, 35, 0.85);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(74, 144, 226, 0.3);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .joystick-stick {
+            width: 60px;
+            height: 60px;
+            background: rgba(74, 144, 226, 0.6);
+            border: 2px solid rgba(74, 144, 226, 0.8);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+
+        .joystick-stick:active {
+            background: rgba(74, 144, 226, 0.9);
+        }
+
+        /* Control Buttons Grid */
+        .control-buttons {
+            position: fixed;
+            bottom: 20px;
+            left: 190px;
+            display: grid;
+            grid-template-columns: repeat(5, 45px);
+            grid-template-rows: repeat(2, 45px);
+            gap: 8px;
+            z-index: 1000;
+        }
+
+        .control-btn {
+            width: 45px;
+            height: 45px;
+            background: rgba(15, 15, 35, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(74, 144, 226, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+        }
+
+        .control-btn:hover {
+            background: rgba(74, 144, 226, 0.3);
+            border-color: rgba(74, 144, 226, 0.6);
+        }
+
+        .control-btn.active {
+            background: rgba(74, 144, 226, 0.6);
+            border-color: rgba(74, 144, 226, 0.9);
+        }
+
+        /* Mobile Movement Control */
         #movement-control {
             position: fixed;
             bottom: 20px;
